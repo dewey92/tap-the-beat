@@ -2,6 +2,9 @@
 
 A simple game to train your beat sense
 
+DEMO: https://tap-the-beat.netlify.app/
+[![Netlify Status](https://api.netlify.com/api/v1/badges/25519be7-87d2-4238-9bc4-cd3d28988e52/deploy-status)](https://app.netlify.com/sites/tap-the-beat/deploys)
+
 ## Available Scripts
 
 In the project directory, you can run:
