@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) =>
   })
 );
 
-const SaveForm: React.FC = (props) => {
+const SaveForm: React.FC = () => {
   const [name, setName] = useState('');
   const { status, loading, success } = useRemoteData<null, never>();
   const classes = useStyles();

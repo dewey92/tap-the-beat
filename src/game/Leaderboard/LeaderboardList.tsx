@@ -3,7 +3,6 @@ import {
   Avatar,
   Box,
   CircularProgress,
-  Chip,
   Divider,
   List,
   ListItem,

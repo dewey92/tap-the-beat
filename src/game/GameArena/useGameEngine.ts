@@ -13,8 +13,8 @@ type State = {
 };
 
 type Actions =
-  | { type: 'ON_BEAT'; payload: Milliseconds }
-  | { type: 'ON_SPACE_HIT'; payload: Milliseconds };
+  | { type: 'RECORD_BEAT'; payload: Milliseconds }
+  | { type: 'CALCULATE_SCORE'; payload: Milliseconds };
 
 const initialState: State = {
   accumulatedScore: 0,
@@ -25,13 +25,13 @@ const initialState: State = {
 
 export const reducer: Reducer<State, Actions> = (state = initialState, action) => {
   switch (action.type) {
-    case 'ON_BEAT': {
+    case 'RECORD_BEAT': {
       return {
         ...state,
         currentBeatTime: action.payload,
       };
     }
-    case 'ON_SPACE_HIT': {
+    case 'CALCULATE_SCORE': {
       const { currentBeatTime, hitHistory } = state;
       const now = action.payload;
       const diff = now - currentBeatTime;

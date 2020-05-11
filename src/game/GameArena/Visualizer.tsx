@@ -69,20 +69,20 @@ const Visualizer: React.FC<VisualizerProps> = ({ song }) => {
     }
 
     if (isPlaying(playState)) {
-      dispatch({ type: 'ON_SPACE_HIT', payload: Date.now() });
+      dispatch({ type: 'CALCULATE_SCORE', payload: Date.now() });
     }
   });
 
   useEffect(() => {
     if (!isPlaying(playState) || !isBufferReady) return;
 
-    const hmm = setInterval(() => {
-      dispatch({ type: 'ON_BEAT', payload: Date.now() });
+    const id = setInterval(() => {
+      dispatch({ type: 'RECORD_BEAT', payload: Date.now() });
       setColorIdx((prev) => {
         return prev === COLORS.length - 1 ? 0 : prev + 1;
       });
     }, averageBeatInSecond.current);
-    return () => clearInterval(hmm);
+    return () => clearInterval(id);
   }, [playState, isBufferReady, dispatch]);
 
   return (
