@@ -5,6 +5,18 @@ A simple game to train your beat sense
 DEMO: https://tap-the-beat.netlify.app/
 [![Netlify Status](https://api.netlify.com/api/v1/badges/25519be7-87d2-4238-9bc4-cd3d28988e52/deploy-status)](https://app.netlify.com/sites/tap-the-beat/deploys)
 
+## How to Play
+
+Basicly all you need to do is **hit the space** as a beat ticks. If you hit within < 80ms after the beat, you'll get 10 points. If 81-120 ms, you'll get 5 points. Otherwise you don't get any point at all.
+
+There's a changing color circle at the center of the page to help you visualize the beat.
+
+Steps:
+- Open https://tap-the-beat.netlify.app/
+- Click one of the four songs available
+- I'd recommend picking "Cancer - MCR" cause the beat is slow so it's easy to play around
+- Hit space to start playing the game
+
 ## Available Scripts
 
 In the project directory, you can run:
@@ -25,5 +37,5 @@ Learn more:
 
 ## Libraries
 
-- SWR for data fetching
-- Material UI for looks and feel
+- [SWR](https://swr.now.sh/) for data fetching
+- [Material UI](https://material-ui.com/) for looks and feel in general
