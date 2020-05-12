@@ -2,8 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import ReactPlayer from 'react-player';
 import { makeStyles, createStyles, Box, Chip, Grid, Paper, Typography } from '@material-ui/core';
 import { useKeyPressEvent } from 'react-use';
-import { Song, Comment } from '../gameModels';
-import useGameEngine from './useGameEngine';
+import { Song } from '../gameModels';
+import useGameEngine, { getCurrentHit } from './useGameEngine';
 import { useHistory } from 'react-router';
 
 const useStyles = makeStyles((theme) =>
@@ -56,10 +56,12 @@ const Visualizer: React.FC<VisualizerProps> = ({ song }) => {
   const [colorIdx, setColorIdx] = useState(0);
   const [progress, setProgress] = useState(0);
   const [duration, setDuration] = useState(0);
-  const [{ accumulatedScore: score, comment }, dispatch] = useGameEngine();
+  const [gameState, dispatch] = useGameEngine();
   const history = useHistory();
   const classes = useStyles();
 
+  const currentHit = getCurrentHit(gameState);
+  const score = gameState.accumulatedScore;
   const timeLeft = secondsToMinutes(duration - progress);
 
   useKeyPressEvent(isSpace, () => {
@@ -129,21 +131,21 @@ const Visualizer: React.FC<VisualizerProps> = ({ song }) => {
           </Paper>
           <Paper variant="outlined" className={classes.progressInfo}>
             <Typography variant="subtitle2">COMMENTS</Typography>
-            {comment === Comment.TooEarly && (
+            {currentHit?.type === 'TooEarly' && (
               <Box color="error.main">
                 <Typography variant="h5">
                   <strong>Too early!</strong>
                 </Typography>
               </Box>
             )}
-            {comment === Comment.Excellent && (
+            {currentHit?.type === 'Excellent' && (
               <Box color="success.main">
                 <Typography variant="h5">
                   <strong>Excellent!!</strong>
                 </Typography>
               </Box>
             )}
-            {comment === Comment.Good && (
+            {currentHit?.type === 'Good' && (
               <Box color="info.main">
                 <Typography variant="h5">
                   <strong>Good!</strong>
