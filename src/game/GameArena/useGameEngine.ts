@@ -1,9 +1,9 @@
 import { calculateHitPoint, feedbackMessage, Comment } from '../gameModels';
 import { Reducer, useReducer } from 'react';
 
-type Milliseconds = number;
-type BeatTime = Milliseconds;
-type HitTime = Milliseconds;
+type DateInMilliseconds = number;
+type BeatTime = DateInMilliseconds;
+type HitTime = DateInMilliseconds;
 
 type State = {
   accumulatedScore: number;
@@ -13,8 +13,8 @@ type State = {
 };
 
 type Actions =
-  | { type: 'RECORD_BEAT'; payload: Milliseconds }
-  | { type: 'CALCULATE_SCORE'; payload: Milliseconds };
+  | { type: 'RECORD_BEAT'; payload: DateInMilliseconds }
+  | { type: 'CALCULATE_SCORE'; payload: DateInMilliseconds };
 
 const initialState: State = {
   accumulatedScore: 0,

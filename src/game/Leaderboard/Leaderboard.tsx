@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) =>
 
 const Leaderboard: React.FC = () => {
   const { cacheSongs } = useCacheSongs();
-  const { status: songsStatus } = useFetchRemoteData('/songs', getSongs, {
+  const { status } = useFetchRemoteData('/songs', getSongs, {
     onSuccess: cacheSongs,
   });
   const classes = useStyles();
@@ -33,9 +33,9 @@ const Leaderboard: React.FC = () => {
         <Typography variant="h4" align="center" gutterBottom>
           Tap a song to play
         </Typography>
-        {songsStatus.type === 'Loading' && <CircularProgress />}
-        {songsStatus.type === 'Failure' && <Alert severity="error">{songsStatus.error}</Alert>}
-        {songsStatus.type === 'Success' && <SongList songs={songsStatus.value} />}
+        {status.type === 'Loading' && <CircularProgress />}
+        {status.type === 'Failure' && <Alert severity="error">{status.error}</Alert>}
+        {status.type === 'Success' && <SongList songs={status.value} />}
       </div>
 
       <div className={classes.list}>

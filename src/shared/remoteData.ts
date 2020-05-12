@@ -12,14 +12,14 @@ export const err = <E>(error: E): Result<never, E> => ({
   error,
 });
 
-export type Status<A, E> =
+export type RemoteData<A, E> =
   | { type: 'NotAsked' }
   | { type: 'Loading' }
   | { type: 'Success'; value: A }
   | { type: 'Failure'; error: E };
 
 export function useRemoteData<A, E>() {
-  const [status, setStatus] = useState<Status<A, E>>({ type: 'NotAsked' });
+  const [status, setStatus] = useState<RemoteData<A, E>>({ type: 'NotAsked' });
 
   const notAsked = useCallback(() => setStatus({ type: 'NotAsked' }), []);
   const loading = useCallback(() => setStatus({ type: 'Loading' }), []);
