@@ -49,12 +49,12 @@ export function useFetchRemoteData<A, E>(
   config?: FetchOption<A, E>
 ) {
   const remoteData = useRemoteData<A, E>();
-  const cache = useRef<null | A>(null);
+  const hasCache = useRef<boolean>(false);
 
   useSWR(
     key,
     () => {
-      if (cache.current === null) {
+      if (!hasCache.current) {
         remoteData.loading();
       }
       return fn();
@@ -67,7 +67,7 @@ export function useFetchRemoteData<A, E>(
         }
         if (result.type === 'Ok') {
           remoteData.success(result.value);
-          cache.current = result.value;
+          hasCache.current = true;
 
           config?.onSuccess?.(result.value);
         }
