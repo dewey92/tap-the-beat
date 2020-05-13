@@ -1,15 +1,13 @@
-import { calculateHitPoint, feedbackMessage, Comment } from '../gameModels';
+import { calculateHitPoint, HitPoint, tooEarly } from '../gameModels';
 import { Reducer, useReducer } from 'react';
 
 type DateInMilliseconds = number;
 type BeatTime = DateInMilliseconds;
-type HitTime = DateInMilliseconds;
 
 type State = {
   accumulatedScore: number;
   currentBeatTime: BeatTime;
-  hitHistory: [BeatTime, HitTime][];
-  comment: Comment;
+  hitHistory: [BeatTime, HitPoint][];
 };
 
 type Actions =
@@ -20,7 +18,6 @@ const initialState: State = {
   accumulatedScore: 0,
   currentBeatTime: 0,
   hitHistory: [],
-  comment: Comment.NoComment,
 };
 
 export const reducer: Reducer<State, Actions> = (state = initialState, action) => {
@@ -36,27 +33,23 @@ export const reducer: Reducer<State, Actions> = (state = initialState, action) =
       const now = action.payload;
       const diff = now - currentBeatTime;
 
-      const nextHitHistory = state.hitHistory.concat([[currentBeatTime, now]]);
-
       // Inspect the beat-time the last time you hit the space, if it's the same as the current beat-time,
-      // means you're hitting space more than once within the beat interval. In that case, show
-      // "Too early" message
-      const lastSpaceHit = hitHistory[hitHistory.length - 1];
-      const hitSpaceTooFast = lastSpaceHit !== undefined && lastSpaceHit[0] === currentBeatTime;
-      if (hitSpaceTooFast) {
+      // means you're hitting space more than once within the beat interval. In that case, you are
+      // considered hitting space too early
+      const [lastBeatTime] = hitHistory[hitHistory.length - 1] || [];
+      const hitSpaceTooEarly = lastBeatTime === currentBeatTime;
+      if (hitSpaceTooEarly) {
         return {
           ...state,
-          comment: Comment.TooEarly,
-          hitHistory: nextHitHistory,
+          hitHistory: state.hitHistory.concat([[currentBeatTime, tooEarly()]]),
         };
       }
 
-      const currPoint = calculateHitPoint(diff);
+      const currentHit = calculateHitPoint(diff);
       return {
         ...state,
-        hitHistory: nextHitHistory,
-        accumulatedScore: state.accumulatedScore + currPoint.point,
-        comment: feedbackMessage(currPoint),
+        hitHistory: state.hitHistory.concat([[currentBeatTime, currentHit]]),
+        accumulatedScore: state.accumulatedScore + currentHit.point,
       };
     }
     default:
@@ -64,8 +57,17 @@ export const reducer: Reducer<State, Actions> = (state = initialState, action) =
   }
 };
 
-const useGameEngine = () => {
-  return useReducer(reducer, initialState);
+const useGameEngine = () => useReducer(reducer, initialState);
+
+/**
+ * A selector function to get the current hit from state. Technically it's just
+ * the last item of `hitHistory`
+ */
+export const getCurrentHit = (state: State): HitPoint | undefined => {
+  const { hitHistory } = state;
+  const [, currentHit] = hitHistory[hitHistory.length - 1] || [];
+
+  return currentHit;
 };
 
 export default useGameEngine;
