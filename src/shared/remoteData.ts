@@ -12,14 +12,14 @@ export const err = <E>(error: E): Result<never, E> => ({
   error,
 });
 
-export type Status<A, E> =
+export type RemoteData<A, E> =
   | { type: 'NotAsked' }
   | { type: 'Loading' }
   | { type: 'Success'; value: A }
   | { type: 'Failure'; error: E };
 
 export function useRemoteData<A, E>() {
-  const [status, setStatus] = useState<Status<A, E>>({ type: 'NotAsked' });
+  const [status, setStatus] = useState<RemoteData<A, E>>({ type: 'NotAsked' });
 
   const notAsked = useCallback(() => setStatus({ type: 'NotAsked' }), []);
   const loading = useCallback(() => setStatus({ type: 'Loading' }), []);
@@ -49,12 +49,12 @@ export function useFetchRemoteData<A, E>(
   config?: FetchOption<A, E>
 ) {
   const remoteData = useRemoteData<A, E>();
-  const cache = useRef<null | A>(null);
+  const hasCache = useRef<boolean>(false);
 
   useSWR(
     key,
     () => {
-      if (cache.current === null) {
+      if (!hasCache.current) {
         remoteData.loading();
       }
       return fn();
@@ -67,7 +67,7 @@ export function useFetchRemoteData<A, E>(
         }
         if (result.type === 'Ok') {
           remoteData.success(result.value);
-          cache.current = result.value;
+          hasCache.current = true;
 
           config?.onSuccess?.(result.value);
         }
